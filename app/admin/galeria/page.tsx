@@ -27,9 +27,9 @@ export default async function GlobalGaleriaPage({ searchParams }: Props) {
     : { data: [] }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Galeria</h1>
+        <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">Galeria</h1>
         <p className="text-gray-500 text-sm mt-1">Fotos e vídeos de todos os seus eventos</p>
       </div>
 

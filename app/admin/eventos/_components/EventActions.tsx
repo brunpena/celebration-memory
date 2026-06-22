@@ -13,13 +13,14 @@ interface Props {
 export default function EventActions({ eventId, eventName }: Props) {
   const [open, setOpen] = useState(false)
   const [busy, setBusy] = useState<'archive' | 'delete' | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const ref = useRef<HTMLDivElement>(null)
   const router = useRouter()
   const supabase = createClient()
 
   useEffect(() => {
     function handler(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+      if (ref.current && !ref.current.contains(e.target as Node)) { setOpen(false); setError(null) }
     }
     document.addEventListener('mousedown', handler)
     return () => document.removeEventListener('mousedown', handler)
@@ -27,18 +28,22 @@ export default function EventActions({ eventId, eventName }: Props) {
 
   async function handleArchive() {
     setBusy('archive')
-    await supabase.from('events').update({ status: 'arquivado' }).eq('id', eventId)
-    router.refresh()
+    setError(null)
+    const { error: err } = await supabase.from('events').update({ status: 'arquivado' }).eq('id', eventId)
     setBusy(null)
+    if (err) { setError('Não foi possível arquivar o evento.'); return }
+    router.refresh()
     setOpen(false)
   }
 
   async function handleDelete() {
     if (!confirm(`Tem certeza que deseja excluir "${eventName}"? Esta ação não pode ser desfeita.`)) return
     setBusy('delete')
-    await supabase.from('events').delete().eq('id', eventId)
-    router.refresh()
+    setError(null)
+    const { error: err } = await supabase.from('events').delete().eq('id', eventId)
     setBusy(null)
+    if (err) { setError('Não foi possível excluir o evento.'); return }
+    router.refresh()
     setOpen(false)
   }
 
@@ -70,6 +75,9 @@ export default function EventActions({ eventId, eventName }: Props) {
             <Trash2 className="w-4 h-4" />
             {busy === 'delete' ? 'Excluindo...' : 'Excluir'}
           </button>
+          {error && (
+            <p className="px-4 py-2 text-xs text-red-600 bg-red-50 border-t border-red-100">{error}</p>
+          )}
         </div>
       )}
     </div>

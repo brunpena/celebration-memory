@@ -16,15 +16,15 @@ export default async function ConfiguracoesPage() {
   const account = userRecord?.accounts ?? null
 
   return (
-    <div className="max-w-3xl space-y-6">
+    <div className="max-w-3xl space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Configurações</h1>
+        <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">Configurações</h1>
         <p className="text-gray-500 text-sm mt-1">Gerencie os dados da sua conta e agência</p>
       </div>
 
       {/* Dados da conta */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
+        <div className="px-6 py-5 border-b border-gray-100 flex items-center gap-2">
           <Settings className="w-4 h-4 text-gray-400" />
           <h2 className="font-semibold text-gray-900">Dados da agência</h2>
         </div>
@@ -35,7 +35,7 @@ export default async function ConfiguracoesPage() {
 
       {/* Plano atual */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-100">
+        <div className="px-6 py-5 border-b border-gray-100">
           <h2 className="font-semibold text-gray-900">Plano atual</h2>
         </div>
         <div className="p-6">
@@ -57,7 +57,7 @@ export default async function ConfiguracoesPage() {
 
       {/* Equipe */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
+        <div className="px-6 py-5 border-b border-gray-100 flex items-center gap-2">
           <Users className="w-4 h-4 text-gray-400" />
           <h2 className="font-semibold text-gray-900">Equipe</h2>
         </div>
@@ -86,7 +86,7 @@ export default async function ConfiguracoesPage() {
 
       {/* Segurança */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
+        <div className="px-6 py-5 border-b border-gray-100 flex items-center gap-2">
           <Shield className="w-4 h-4 text-gray-400" />
           <h2 className="font-semibold text-gray-900">Segurança</h2>
         </div>
@@ -114,7 +114,7 @@ export default async function ConfiguracoesPage() {
 
       {/* Notificações */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between gap-2">
+        <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <Bell className="w-4 h-4 text-gray-400" />
             <h2 className="font-semibold text-gray-900">Notificações</h2>

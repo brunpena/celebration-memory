@@ -45,25 +45,25 @@ export default async function EventoPage({ params }: Props) {
   ]
 
   return (
-    <div className="max-w-3xl space-y-6">
+    <div className="max-w-3xl space-y-8">
       <div className="flex items-center gap-3">
-        <Link href="/admin/eventos" className="p-2 hover:bg-gray-100 rounded-xl transition text-gray-500">
+        <Link href="/admin/eventos" className="p-2 hover:bg-gray-100 rounded-xl transition text-gray-500 shrink-0">
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <div className="flex-1 min-w-0">
-          <h1 className="text-2xl font-bold text-gray-900 truncate">{event.name}</h1>
+          <h1 className="text-2xl font-semibold text-gray-900 tracking-tight truncate">{event.name}</h1>
           <p className="text-gray-500 text-sm mt-0.5">/{event.slug}</p>
         </div>
       </div>
 
       {/* Atalhos rápidos */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
         {quickLinks.map(({ href, icon: Icon, label, count, external }) => (
           <Link
             key={href}
             href={href}
             target={external ? '_blank' : undefined}
-            className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex flex-col items-center gap-2 hover:border-violet-200 hover:shadow-md transition group"
+            className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 flex flex-col items-center gap-2.5 hover:border-violet-200 hover:shadow-md transition group"
           >
             <div className="w-10 h-10 rounded-xl bg-violet-50 group-hover:bg-violet-100 flex items-center justify-center transition">
               <Icon className="w-5 h-5 text-violet-600" />
@@ -78,7 +78,7 @@ export default async function EventoPage({ params }: Props) {
 
       {/* Formulário de edição */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
+        <div className="px-6 py-5 border-b border-gray-100 flex items-center gap-2">
           <Settings className="w-4 h-4 text-gray-400" />
           <h2 className="font-semibold text-gray-900">Configurações do evento</h2>
         </div>

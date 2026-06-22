@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
 interface Props {
@@ -13,38 +14,58 @@ export default function AccountSettingsForm({ account }: Props) {
   const [domain, setDomain] = useState(account?.domain ?? '')
   const [loading, setLoading] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
   const supabase = createClient()
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
     setSaved(false)
+    setError(null)
 
     if (account?.id) {
-      await supabase.from('accounts').update({
+      const { error: err } = await supabase.from('accounts').update({
         name: name.trim(),
         primary_color: primaryColor,
         domain: domain.trim() || null,
       }).eq('id', account.id)
+
+      if (err) {
+        setError(err.message.includes('domain') ? 'Esse domínio já está em uso.' : 'Não foi possível salvar as configurações.')
+        setLoading(false)
+        return
+      }
     } else {
       const { data: { user } } = await supabase.auth.getUser()
       const userName = (user?.user_metadata?.name as string | undefined) || user?.email || 'Usuário'
 
-      const { data: accountId } = await supabase.rpc('bootstrap_account', {
+      const { data: accountId, error: bootstrapError } = await supabase.rpc('bootstrap_account', {
         p_name: userName,
         p_account_name: name.trim(),
       })
 
-      if (accountId) {
-        await supabase.from('accounts').update({
-          primary_color: primaryColor,
-          domain: domain.trim() || null,
-        }).eq('id', accountId)
+      if (bootstrapError || !accountId) {
+        setError('Não foi possível criar a agência.')
+        setLoading(false)
+        return
+      }
+
+      const { error: err } = await supabase.from('accounts').update({
+        primary_color: primaryColor,
+        domain: domain.trim() || null,
+      }).eq('id', accountId)
+
+      if (err) {
+        setError(err.message.includes('domain') ? 'Esse domínio já está em uso.' : 'Agência criada, mas não foi possível salvar cor/domínio.')
+        setLoading(false)
+        return
       }
     }
 
     setSaved(true)
     setLoading(false)
+    router.refresh()
   }
 
   return (
@@ -84,6 +105,12 @@ export default function AccountSettingsForm({ account }: Props) {
           <span className="text-sm text-gray-500 font-mono">{primaryColor}</span>
         </div>
       </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-red-600 text-sm">
+          {error}
+        </div>
+      )}
 
       {saved && (
         <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-3 text-green-600 text-sm">

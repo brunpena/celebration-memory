@@ -17,7 +17,7 @@ export default function LoginPage() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/10 backdrop-blur mb-4">
             <span className="text-3xl">✨</span>
           </div>
-          <h1 className="text-3xl font-bold text-white">Celebration Memory</h1>
+          <h1 className="text-3xl font-semibold text-white tracking-tight">Celebration Memory</h1>
           <p className="text-purple-200 mt-2">Gestão de eventos e memórias</p>
         </div>
 

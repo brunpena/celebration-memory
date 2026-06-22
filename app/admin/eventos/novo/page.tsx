@@ -87,7 +87,7 @@ export default function NovoEventoPage() {
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Novo evento</h1>
+          <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">Novo evento</h1>
           <p className="text-gray-500 text-sm mt-0.5">Preencha os dados do evento</p>
         </div>
       </div>

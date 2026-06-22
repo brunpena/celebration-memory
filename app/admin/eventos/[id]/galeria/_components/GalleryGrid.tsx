@@ -13,6 +13,7 @@ interface Props {
 export default function GalleryGrid({ files }: Props) {
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const router = useRouter()
   const supabase = createClient()
 
@@ -27,29 +28,37 @@ export default function GalleryGrid({ files }: Props) {
 
   async function toggleFavorite(file: GalleryFile) {
     setLoading(file.id)
-    await supabase.from('gallery_files').update({ is_favorite: !file.is_favorite }).eq('id', file.id)
+    setError(null)
+    const { error: err } = await supabase.from('gallery_files').update({ is_favorite: !file.is_favorite }).eq('id', file.id)
     setLoading(null)
+    if (err) { setError('Não foi possível atualizar o favorito.'); return }
     router.refresh()
   }
 
   async function approveFile(file: GalleryFile) {
     setLoading(file.id)
-    await supabase.from('gallery_files').update({ is_approved: true }).eq('id', file.id)
+    setError(null)
+    const { error: err } = await supabase.from('gallery_files').update({ is_approved: true }).eq('id', file.id)
     setLoading(null)
+    if (err) { setError('Não foi possível aprovar o arquivo.'); return }
     router.refresh()
   }
 
   async function deleteFile(file: GalleryFile) {
     if (!confirm('Excluir este arquivo?')) return
     setLoading(file.id)
-    await supabase.from('gallery_files').delete().eq('id', file.id)
+    setError(null)
+    const { error: err } = await supabase.from('gallery_files').delete().eq('id', file.id)
     setLoading(null)
+    if (err) { setError('Não foi possível excluir o arquivo.'); return }
     router.refresh()
   }
 
   async function deleteSelected() {
     if (!confirm(`Excluir ${selected.size} arquivo(s)?`)) return
-    await supabase.from('gallery_files').delete().in('id', Array.from(selected))
+    setError(null)
+    const { error: err } = await supabase.from('gallery_files').delete().in('id', Array.from(selected))
+    if (err) { setError('Não foi possível excluir os arquivos selecionados.'); return }
     setSelected(new Set())
     router.refresh()
   }
@@ -68,6 +77,13 @@ export default function GalleryGrid({ files }: Props) {
 
   return (
     <div className="space-y-4">
+      {error && (
+        <div className="flex items-center justify-between bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600">
+          {error}
+          <button onClick={() => setError(null)} className="text-red-400 hover:text-red-600 text-xs font-medium">Fechar</button>
+        </div>
+      )}
+
       {selected.size > 0 && (
         <div className="flex items-center justify-between bg-violet-50 border border-violet-200 rounded-xl px-4 py-3">
           <span className="text-sm font-medium text-violet-700">{selected.size} selecionado(s)</span>

@@ -42,23 +42,27 @@ export default function GiftListManager({ eventId, giftList: initialGiftList }: 
   const [pixKey, setPixKey] = useState(initialGiftList?.pix_key ?? '')
   const [description, setDescription] = useState(initialGiftList?.description ?? '')
   const [savingInfo, setSavingInfo] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const supabase = createClient()
 
   async function createList() {
     setLoading(true)
-    const { data } = await supabase
+    setError(null)
+    const { data, error: err } = await supabase
       .from('gift_lists')
       .insert({ event_id: eventId, name: 'Lista de Presentes' })
       .select('*, gifts(*)')
       .single()
-    setGiftList(data)
     setLoading(false)
+    if (err || !data) { setError('Não foi possível criar a lista de presentes.'); return }
+    setGiftList(data)
   }
 
   async function addGift() {
     if (!giftList || !giftName.trim()) return
     setLoading(true)
-    const { data: gift } = await supabase
+    setError(null)
+    const { data: gift, error: err } = await supabase
       .from('gifts')
       .insert({
         gift_list_id: giftList.id,
@@ -71,17 +75,21 @@ export default function GiftListManager({ eventId, giftList: initialGiftList }: 
       .select()
       .single()
 
+    setLoading(false)
+    if (err || !gift) { setError('Não foi possível adicionar o presente.'); return }
+
     setGiftList((prev) => prev ? { ...prev, gifts: [...prev.gifts, gift] } : prev)
     setGiftName('')
     setGiftValue('')
     setGiftCategory('')
     setShowAdd(false)
-    setLoading(false)
   }
 
   async function toggleStatus(gift: GiftItem) {
+    setError(null)
     const next = gift.status === 'comprado' ? 'disponivel' : 'comprado'
-    await supabase.from('gifts').update({ status: next }).eq('id', gift.id)
+    const { error: err } = await supabase.from('gifts').update({ status: next }).eq('id', gift.id)
+    if (err) { setError('Não foi possível atualizar o status do presente.'); return }
     setGiftList((prev) => prev ? {
       ...prev,
       gifts: prev.gifts.map((g) => g.id === gift.id ? { ...g, status: next } : g)
@@ -91,42 +99,54 @@ export default function GiftListManager({ eventId, giftList: initialGiftList }: 
   async function deleteGift(giftId: string) {
     if (!confirm('Excluir este presente?')) return
     setDeletingId(giftId)
-    await supabase.from('gifts').delete().eq('id', giftId)
+    setError(null)
+    const { error: err } = await supabase.from('gifts').delete().eq('id', giftId)
+    setDeletingId(null)
+    if (err) { setError('Não foi possível excluir o presente.'); return }
     setGiftList((prev) => prev ? {
       ...prev,
       gifts: prev.gifts.filter((g) => g.id !== giftId)
     } : prev)
-    setDeletingId(null)
   }
 
   async function saveListInfo() {
     if (!giftList) return
     setSavingInfo(true)
-    await supabase
+    setError(null)
+    const { error: err } = await supabase
       .from('gift_lists')
       .update({ pix_key: pixKey.trim() || null, description: description.trim() || null })
       .eq('id', giftList.id)
-    setGiftList((prev) => prev ? { ...prev, pix_key: pixKey.trim() || null, description: description.trim() || null } : prev)
     setSavingInfo(false)
+    if (err) { setError('Não foi possível salvar a chave PIX e a mensagem.'); return }
+    setGiftList((prev) => prev ? { ...prev, pix_key: pixKey.trim() || null, description: description.trim() || null } : prev)
     setEditingInfo(false)
   }
 
   if (!giftList) {
     return (
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
-        <div className="w-16 h-16 bg-pink-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-          <Gift className="w-8 h-8 text-pink-400" />
+      <div className="space-y-4">
+        {error && (
+          <div className="flex items-center justify-between bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600">
+            {error}
+            <button onClick={() => setError(null)} className="text-red-400 hover:text-red-600 text-xs font-medium">Fechar</button>
+          </div>
+        )}
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
+          <div className="w-16 h-16 bg-pink-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <Gift className="w-8 h-8 text-pink-400" />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Nenhuma lista criada</h3>
+          <p className="text-gray-500 text-sm mb-6">Crie uma lista de presentes para este evento.</p>
+          <button
+            onClick={createList}
+            disabled={loading}
+            className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium transition disabled:opacity-50"
+          >
+            <Plus className="w-4 h-4" />
+            {loading ? 'Criando...' : 'Criar lista de presentes'}
+          </button>
         </div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">Nenhuma lista criada</h3>
-        <p className="text-gray-500 text-sm mb-6">Crie uma lista de presentes para este evento.</p>
-        <button
-          onClick={createList}
-          disabled={loading}
-          className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium transition"
-        >
-          <Plus className="w-4 h-4" />
-          Criar lista de presentes
-        </button>
       </div>
     )
   }
@@ -136,6 +156,13 @@ export default function GiftListManager({ eventId, giftList: initialGiftList }: 
 
   return (
     <div className="space-y-4">
+      {error && (
+        <div className="flex items-center justify-between bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600">
+          {error}
+          <button onClick={() => setError(null)} className="text-red-400 hover:text-red-600 text-xs font-medium">Fechar</button>
+        </div>
+      )}
+
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
         <div className="flex items-center justify-between mb-4">
           <div>

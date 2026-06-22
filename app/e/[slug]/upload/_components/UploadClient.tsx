@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Upload, Camera, CheckCircle2, X, Image as ImageIcon, Video } from 'lucide-react'
+import { ArrowLeft, Upload, Camera, CheckCircle2, X, Video } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
 interface Event {
@@ -99,7 +99,7 @@ export default function UploadClient({ event }: Props) {
         .from('event-files')
         .getPublicUrl(uploadData.path)
 
-      await supabase.from('gallery_files').insert({
+      const { error: insertError } = await supabase.from('gallery_files').insert({
         event_id: event.id,
         guest_id: guestId,
         file_url: publicUrl,
@@ -110,6 +110,11 @@ export default function UploadClient({ event }: Props) {
         is_favorite: false,
       })
 
+      if (insertError) {
+        setFiles((prev) => prev.map((f) => f.id === item.id ? { ...f, status: 'error', error: insertError.message } : f))
+        continue
+      }
+
       setFiles((prev) => prev.map((f) => f.id === item.id ? { ...f, status: 'done', progress: 100 } : f))
     }
 
@@ -118,26 +123,44 @@ export default function UploadClient({ event }: Props) {
   }
 
   if (done) {
+    const doneCount = files.filter(f => f.status === 'done').length
+    const errorCount = files.filter(f => f.status === 'error').length
+    const allFailed = doneCount === 0 && errorCount > 0
+
     return (
       <div className="min-h-screen bg-white flex items-center justify-center p-6">
-        <div className="text-center max-w-sm">
-          <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6">
-            <CheckCircle2 className="w-10 h-10 text-green-600" />
+        <div className="text-center max-w-sm w-full">
+          <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 ${allFailed ? 'bg-red-50' : 'bg-green-50'}`}>
+            {allFailed ? <X className="w-10 h-10 text-red-600" /> : <CheckCircle2 className="w-10 h-10 text-green-600" />}
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Obrigado!</h2>
-          <p className="text-gray-500 mb-6">
-            {files.filter(f => f.status === 'done').length} arquivo(s) enviado(s) com sucesso para o álbum de {event.name}.
+          <h2 className="text-2xl font-semibold text-gray-900 tracking-tight mb-2">
+            {allFailed ? 'Não foi possível enviar' : 'Obrigado!'}
+          </h2>
+          <p className="text-gray-500 mb-2 leading-relaxed">
+            {allFailed
+              ? 'Nenhum arquivo foi salvo. Verifique sua conexão e tente novamente.'
+              : `${doneCount} arquivo(s) enviado(s) com sucesso para o álbum de ${event.name}.`}
           </p>
-          <div className="flex flex-col gap-3">
+          {!allFailed && errorCount > 0 && (
+            <p className="text-amber-600 text-sm mb-6">{errorCount} arquivo(s) não puderam ser enviados.</p>
+          )}
+          <div className="flex flex-col gap-3 mt-6">
             <button
-              onClick={() => { setDone(false); setFiles([]) }}
-              className="w-full py-3 bg-violet-600 hover:bg-violet-500 text-white rounded-xl font-medium transition"
+              onClick={() => {
+                if (allFailed) {
+                  setDone(false)
+                } else {
+                  setDone(false)
+                  setFiles([])
+                }
+              }}
+              className="w-full py-3.5 bg-violet-600 hover:bg-violet-500 active:bg-violet-700 text-white rounded-2xl font-semibold transition"
             >
-              Enviar mais fotos
+              {allFailed || errorCount > 0 ? 'Tentar novamente' : 'Enviar mais fotos'}
             </button>
             <Link
               href={`/e/${event.slug}`}
-              className="w-full py-3 text-center text-gray-600 hover:text-gray-900 transition"
+              className="w-full py-3 text-center text-gray-500 hover:text-gray-900 transition text-sm font-medium"
             >
               Voltar ao evento
             </Link>
@@ -150,9 +173,9 @@ export default function UploadClient({ event }: Props) {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <div className="bg-white/90 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-10">
         <div className="max-w-xl mx-auto px-4 h-14 flex items-center gap-3">
-          <Link href={`/e/${event.slug}`} className="p-2 -ml-2 text-gray-500 hover:text-gray-900">
+          <Link href={`/e/${event.slug}`} className="p-2 -ml-2 text-gray-500 hover:text-gray-900 active:scale-95 transition">
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <div className="flex-1 min-w-0">
@@ -162,14 +185,14 @@ export default function UploadClient({ event }: Props) {
         </div>
       </div>
 
-      <div className="max-w-xl mx-auto px-4 py-6 space-y-5">
+      <div className="max-w-xl mx-auto px-4 py-6 space-y-5 pb-28">
         {/* Área de drop */}
         <div
           onDragOver={(e) => { e.preventDefault(); setDragging(true) }}
           onDragLeave={() => setDragging(false)}
           onDrop={onDrop}
           onClick={() => inputRef.current?.click()}
-          className={`border-2 border-dashed rounded-2xl p-10 text-center cursor-pointer transition ${
+          className={`border-2 border-dashed rounded-2xl p-8 sm:p-10 text-center cursor-pointer transition active:scale-[0.99] ${
             dragging
               ? 'border-violet-500 bg-violet-50'
               : 'border-gray-200 bg-white hover:border-violet-400 hover:bg-violet-50'
@@ -191,8 +214,8 @@ export default function UploadClient({ event }: Props) {
               <Camera className="w-6 h-6 text-purple-600" />
             </div>
           </div>
-          <p className="font-semibold text-gray-900 mb-1">Arraste suas fotos aqui</p>
-          <p className="text-sm text-gray-500">ou toque para selecionar do celular</p>
+          <p className="font-semibold text-gray-900 mb-1">Toque para escolher fotos e vídeos</p>
+          <p className="text-sm text-gray-500 hidden sm:block">ou arraste os arquivos aqui</p>
           <p className="text-xs text-gray-400 mt-2">JPG, PNG, MP4, MOV — máx. 100MB por arquivo</p>
         </div>
 
@@ -228,9 +251,9 @@ export default function UploadClient({ event }: Props) {
                   {f.status === 'pending' && (
                     <button
                       onClick={() => removeFile(f.id)}
-                      className="absolute top-1 right-1 w-5 h-5 bg-black/50 rounded-full flex items-center justify-center text-white"
+                      className="absolute top-1 right-1 w-6 h-6 bg-black/50 rounded-full flex items-center justify-center text-white"
                     >
-                      <X className="w-3 h-3" />
+                      <X className="w-3.5 h-3.5" />
                     </button>
                   )}
                 </div>
@@ -243,44 +266,49 @@ export default function UploadClient({ event }: Props) {
         <div className="bg-white rounded-2xl border border-gray-100 p-5 space-y-4">
           <h3 className="font-semibold text-gray-900 text-sm">Seus dados (opcional)</h3>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Seu nome</label>
+            <label className="block text-xs font-medium text-gray-500 mb-1.5">Seu nome</label>
             <input
               type="text"
               value={guestName}
               onChange={(e) => setGuestName(e.target.value)}
               placeholder="Como você quer ser identificado?"
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-base sm:text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Mensagem (opcional)</label>
+            <label className="block text-xs font-medium text-gray-500 mb-1.5">Mensagem (opcional)</label>
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               rows={2}
               placeholder="Deixe uma mensagem carinhosa..."
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition resize-none"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-base sm:text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition resize-none"
             />
           </div>
         </div>
+      </div>
 
-        <button
-          onClick={handleUpload}
-          disabled={files.length === 0 || uploading}
-          className="w-full py-4 bg-violet-600 hover:bg-violet-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-2xl transition flex items-center justify-center gap-2"
-        >
-          {uploading ? (
-            <>
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              Enviando...
-            </>
-          ) : (
-            <>
-              <Upload className="w-5 h-5" />
-              Enviar {files.length > 0 ? `${files.length} arquivo(s)` : 'fotos'}
-            </>
-          )}
-        </button>
+      {/* Barra de ação fixa */}
+      <div className="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-sm border-t border-gray-100 p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+        <div className="max-w-xl mx-auto">
+          <button
+            onClick={handleUpload}
+            disabled={files.length === 0 || uploading}
+            className="w-full py-3.5 bg-violet-600 hover:bg-violet-500 active:bg-violet-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold rounded-2xl transition flex items-center justify-center gap-2 shadow-lg shadow-violet-600/20"
+          >
+            {uploading ? (
+              <>
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                Enviando...
+              </>
+            ) : (
+              <>
+                <Upload className="w-5 h-5" />
+                Enviar {files.length > 0 ? `${files.length} arquivo(s)` : 'fotos'}
+              </>
+            )}
+          </button>
+        </div>
       </div>
     </div>
   )

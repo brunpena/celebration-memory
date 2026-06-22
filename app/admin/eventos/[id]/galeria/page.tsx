@@ -50,13 +50,13 @@ export default async function GaleriaPage({ params, searchParams }: Props) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex items-center gap-3">
         <Link href={`/admin/eventos/${id}`} className="p-2 hover:bg-gray-100 rounded-xl transition text-gray-500">
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Galeria</h1>
+          <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">Galeria</h1>
           <p className="text-gray-500 text-sm mt-0.5">{event.name}</p>
         </div>
       </div>

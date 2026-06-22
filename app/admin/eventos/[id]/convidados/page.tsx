@@ -29,13 +29,13 @@ export default async function ConvidadosPage({ params }: Props) {
     .order('created_at', { ascending: false })
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex items-center gap-3">
         <Link href={`/admin/eventos/${id}`} className="p-2 hover:bg-gray-100 rounded-xl transition text-gray-500">
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Convidados</h1>
+          <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">Convidados</h1>
           <p className="text-gray-500 text-sm mt-0.5">{event.name} · {guests?.length ?? 0} participante(s)</p>
         </div>
       </div>

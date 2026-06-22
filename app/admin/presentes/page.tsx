@@ -11,9 +11,9 @@ export default async function GlobalPresentesPage() {
     .order('created_at', { ascending: false })
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Listas de Presentes</h1>
+        <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">Listas de Presentes</h1>
         <p className="text-gray-500 text-sm mt-1">Acompanhe as listas de presentes de cada evento</p>
       </div>
 

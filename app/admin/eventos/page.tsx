@@ -50,38 +50,38 @@ export default async function EventosPage() {
   const events = await getEvents()
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-8">
+      <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Eventos</h1>
-          <p className="text-gray-500 text-sm mt-1">{events.length} evento{events.length !== 1 ? 's' : ''} cadastrado{events.length !== 1 ? 's' : ''}</p>
+          <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">Eventos</h1>
+          <p className="text-gray-500 text-sm mt-1.5">{events.length} evento{events.length !== 1 ? 's' : ''} cadastrado{events.length !== 1 ? 's' : ''}</p>
         </div>
         <Link
           href="/admin/eventos/novo"
-          className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-500 text-white px-4 py-2 rounded-xl text-sm font-medium transition"
+          className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-500 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition shadow-sm shrink-0"
         >
           <Plus className="w-4 h-4" />
-          Novo evento
+          <span className="hidden sm:inline">Novo evento</span>
         </Link>
       </div>
 
       {events.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
-          <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <Calendar className="w-8 h-8 text-gray-400" />
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 sm:p-16 text-center">
+          <div className="w-16 h-16 bg-violet-50 rounded-2xl flex items-center justify-center mx-auto mb-5">
+            <Calendar className="w-8 h-8 text-violet-400" />
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">Nenhum evento criado</h3>
-          <p className="text-gray-500 text-sm mb-6">Crie seu primeiro evento para começar a receber fotos e presentes.</p>
+          <p className="text-gray-500 text-sm mb-6 max-w-sm mx-auto">Crie seu primeiro evento para começar a receber fotos e presentes.</p>
           <Link
             href="/admin/eventos/novo"
-            className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium transition"
+            className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium transition shadow-sm"
           >
             <Plus className="w-4 h-4" />
             Criar evento
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-6">
           {events.map((event: {
             id: string
             name: string
@@ -98,7 +98,7 @@ export default async function EventosPage() {
             const guestCount = event.guests?.[0]?.count ?? 0
 
             return (
-              <div key={event.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden group">
+              <div key={event.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden group">
                 <div className="h-40 bg-gradient-to-br from-violet-100 to-purple-100 relative">
                   {event.cover_url ? (
                     <img

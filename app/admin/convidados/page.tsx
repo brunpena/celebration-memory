@@ -17,9 +17,9 @@ export default async function GlobalConvidadosPage() {
     : { data: [] }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Convidados</h1>
+        <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">Convidados</h1>
         <p className="text-gray-500 text-sm mt-1">
           {guests?.length ?? 0} participante{guests?.length !== 1 ? 's' : ''} em todos os eventos
         </p>
