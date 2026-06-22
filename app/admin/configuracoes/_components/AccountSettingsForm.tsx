@@ -72,48 +72,48 @@ export default function AccountSettingsForm({ account }: Props) {
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Nome da agência</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Nome da agência</label>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-violet-500 text-sm transition"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-violet-500 text-sm transition"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Domínio personalizado</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Domínio personalizado</label>
           <input
             type="text"
             value={domain}
             onChange={(e) => setDomain(e.target.value)}
             placeholder="fotos.suaagencia.com.br"
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-violet-500 text-sm transition"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-violet-500 text-sm transition"
           />
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1.5">Cor principal</label>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Cor principal</label>
         <div className="flex items-center gap-3">
           <input
             type="color"
             value={primaryColor}
             onChange={(e) => setPrimaryColor(e.target.value)}
-            className="w-12 h-12 rounded-xl border border-gray-200 cursor-pointer p-1"
+            className="w-12 h-12 rounded-xl border border-gray-200 dark:border-gray-700 cursor-pointer p-1"
           />
-          <span className="text-sm text-gray-500 font-mono">{primaryColor}</span>
+          <span className="text-sm text-gray-500 dark:text-gray-400 font-mono">{primaryColor}</span>
         </div>
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-red-600 text-sm">
+        <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 rounded-xl px-4 py-3 text-red-600 dark:text-red-400 text-sm">
           {error}
         </div>
       )}
 
       {saved && (
-        <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-3 text-green-600 text-sm">
+        <div className="bg-green-50 dark:bg-green-500/10 border border-green-200 dark:border-green-500/20 rounded-xl px-4 py-3 text-green-600 dark:text-green-400 text-sm">
           Configurações salvas com sucesso!
         </div>
       )}

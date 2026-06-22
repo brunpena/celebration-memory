@@ -82,20 +82,20 @@ export default function NovoEventoPage() {
       <div className="flex items-center gap-3">
         <Link
           href="/admin/eventos"
-          className="p-2 hover:bg-gray-100 rounded-xl transition text-gray-500"
+          className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition text-gray-500 dark:text-gray-400"
         >
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">Novo evento</h1>
-          <p className="text-gray-500 text-sm mt-0.5">Preencha os dados do evento</p>
+          <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 tracking-tight">Novo evento</h1>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-0.5">Preencha os dados do evento</p>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-5">
+      <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-5">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5 flex items-center gap-1.5">
-            <Type className="w-3.5 h-3.5 text-gray-400" /> Nome do evento
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 flex items-center gap-1.5">
+            <Type className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" /> Nome do evento
           </label>
           <input
             type="text"
@@ -103,69 +103,69 @@ export default function NovoEventoPage() {
             onChange={(e) => handleNameChange(e.target.value)}
             required
             placeholder="Ex: Casamento Ana e Pedro"
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent text-gray-900 text-sm transition"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent text-gray-900 dark:text-gray-100 text-sm transition placeholder:text-gray-400 dark:placeholder-gray-500"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5 flex items-center gap-1.5">
-            <Link2 className="w-3.5 h-3.5 text-gray-400" /> Link público (slug)
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 flex items-center gap-1.5">
+            <Link2 className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" /> Link público (slug)
           </label>
-          <div className="flex items-center rounded-xl border border-gray-200 overflow-hidden focus-within:ring-2 focus-within:ring-violet-500 focus-within:border-transparent">
-            <span className="px-3 py-3 bg-gray-50 text-gray-400 text-sm border-r border-gray-200">/e/</span>
+          <div className="flex items-center rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden focus-within:ring-2 focus-within:ring-violet-500 focus-within:border-transparent">
+            <span className="px-3 py-3 bg-gray-50 dark:bg-gray-800 text-gray-400 dark:text-gray-500 text-sm border-r border-gray-200 dark:border-gray-700">/e/</span>
             <input
               type="text"
               value={slug}
               onChange={(e) => { setSlug(e.target.value); setSlugEdited(true) }}
               required
               placeholder="ana-e-pedro"
-              className="flex-1 px-4 py-3 text-sm text-gray-900 focus:outline-none"
+              className="flex-1 px-4 py-3 text-sm text-gray-900 dark:text-gray-100 bg-transparent focus:outline-none placeholder:text-gray-400 dark:placeholder-gray-500"
             />
           </div>
-          <p className="text-xs text-gray-400 mt-1">Apenas letras minúsculas, números e hífens</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Apenas letras minúsculas, números e hífens</p>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5 flex items-center gap-1.5">
-              <Calendar className="w-3.5 h-3.5 text-gray-400" /> Data do evento
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 flex items-center gap-1.5">
+              <Calendar className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" /> Data do evento
             </label>
             <input
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent text-gray-900 text-sm transition"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent text-gray-900 dark:text-gray-100 text-sm transition"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5 flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-gray-400" /> Local
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 flex items-center gap-1.5">
+              <MapPin className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" /> Local
             </label>
             <input
               type="text"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               placeholder="Ex: Salão Primavera, SP"
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent text-gray-900 text-sm transition"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent text-gray-900 dark:text-gray-100 text-sm transition placeholder:text-gray-400 dark:placeholder-gray-500"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5 flex items-center gap-1.5">
-            <FileText className="w-3.5 h-3.5 text-gray-400" /> Descrição
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 flex items-center gap-1.5">
+            <FileText className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" /> Descrição
           </label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={3}
             placeholder="Uma breve descrição do evento..."
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent text-gray-900 text-sm transition resize-none"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent text-gray-900 dark:text-gray-100 text-sm transition resize-none placeholder:text-gray-400 dark:placeholder-gray-500"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Status</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Status</label>
           <div className="flex gap-3">
             {(['rascunho', 'ativo'] as const).map((s) => (
               <button
@@ -175,7 +175,7 @@ export default function NovoEventoPage() {
                 className={`flex-1 py-2.5 rounded-xl text-sm font-medium border transition ${
                   status === s
                     ? 'bg-violet-600 text-white border-violet-600'
-                    : 'bg-white text-gray-600 border-gray-200 hover:border-violet-300'
+                    : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-violet-300 dark:hover:border-violet-500/50'
                 }`}
               >
                 {s === 'rascunho' ? 'Rascunho' : 'Publicar agora'}
@@ -185,7 +185,7 @@ export default function NovoEventoPage() {
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-red-600 text-sm">
+          <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 rounded-xl px-4 py-3 text-red-600 dark:text-red-400 text-sm">
             {error}
           </div>
         )}
@@ -193,7 +193,7 @@ export default function NovoEventoPage() {
         <div className="flex gap-3 pt-2">
           <Link
             href="/admin/eventos"
-            className="flex-1 py-3 text-center text-sm font-medium text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-xl transition"
+            className="flex-1 py-3 text-center text-sm font-medium text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition"
           >
             Cancelar
           </Link>

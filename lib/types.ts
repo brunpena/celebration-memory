@@ -34,6 +34,32 @@ export interface AppUser {
   created_at: string
 }
 
+export type PageLayout = 'background' | 'header'
+
+export type TextAnchor =
+  | 'top-left' | 'top-center' | 'top-right'
+  | 'middle-left' | 'middle-center' | 'middle-right'
+  | 'bottom-left' | 'bottom-center' | 'bottom-right'
+
+export type TextBlockArea = 'overlay' | 'body'
+export type TextBlockSize = 'sm' | 'md' | 'lg' | 'xl'
+
+export interface PageTextBlock {
+  id: string
+  content: string
+  area: TextBlockArea
+  anchor: TextAnchor
+  size: TextBlockSize
+  color: string
+}
+
+export interface EventPageDesign {
+  layout: PageLayout
+  backgroundImageUrl: string | null
+  headerImageUrl: string | null
+  textBlocks: PageTextBlock[]
+}
+
 export interface Event {
   id: string
   account_id: string
@@ -44,6 +70,7 @@ export interface Event {
   location: string | null
   cover_url: string | null
   status: EventStatus
+  page_design: Partial<EventPageDesign> | null
   created_at: string
   _count?: {
     gallery_files: number

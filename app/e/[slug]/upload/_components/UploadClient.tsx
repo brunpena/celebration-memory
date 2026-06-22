@@ -251,9 +251,9 @@ export default function UploadClient({ event }: Props) {
                   {f.status === 'pending' && (
                     <button
                       onClick={() => removeFile(f.id)}
-                      className="absolute top-1 right-1 w-6 h-6 bg-black/50 rounded-full flex items-center justify-center text-white"
+                      className="absolute top-1 right-1 w-8 h-8 bg-black/50 rounded-full flex items-center justify-center text-white"
                     >
-                      <X className="w-3.5 h-3.5" />
+                      <X className="w-4 h-4" />
                     </button>
                   )}
                 </div>

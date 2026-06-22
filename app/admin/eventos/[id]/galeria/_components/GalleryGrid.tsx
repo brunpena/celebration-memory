@@ -65,12 +65,12 @@ export default function GalleryGrid({ files }: Props) {
 
   if (files.length === 0) {
     return (
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
-        <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-          <Images className="w-8 h-8 text-gray-400" />
+      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-12 text-center">
+        <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <Images className="w-8 h-8 text-gray-400 dark:text-gray-500" />
         </div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">Nenhum arquivo encontrado</h3>
-        <p className="text-gray-500 text-sm">Quando os convidados enviarem fotos e vídeos, eles aparecerão aqui.</p>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Nenhum arquivo encontrado</h3>
+        <p className="text-gray-500 dark:text-gray-400 text-sm">Quando os convidados enviarem fotos e vídeos, eles aparecerão aqui.</p>
       </div>
     )
   }
@@ -78,25 +78,25 @@ export default function GalleryGrid({ files }: Props) {
   return (
     <div className="space-y-4">
       {error && (
-        <div className="flex items-center justify-between bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600">
+        <div className="flex items-center justify-between bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 rounded-xl px-4 py-3 text-sm text-red-600 dark:text-red-400">
           {error}
-          <button onClick={() => setError(null)} className="text-red-400 hover:text-red-600 text-xs font-medium">Fechar</button>
+          <button onClick={() => setError(null)} className="text-red-400 dark:text-red-500 hover:text-red-600 dark:hover:text-red-400 text-xs font-medium">Fechar</button>
         </div>
       )}
 
       {selected.size > 0 && (
-        <div className="flex items-center justify-between bg-violet-50 border border-violet-200 rounded-xl px-4 py-3">
-          <span className="text-sm font-medium text-violet-700">{selected.size} selecionado(s)</span>
+        <div className="flex items-center justify-between bg-violet-50 dark:bg-violet-500/10 border border-violet-200 dark:border-violet-500/20 rounded-xl px-4 py-3">
+          <span className="text-sm font-medium text-violet-700 dark:text-violet-400">{selected.size} selecionado(s)</span>
           <div className="flex gap-2">
             <button
               onClick={() => setSelected(new Set())}
-              className="text-sm text-violet-600 hover:text-violet-800 px-3 py-1 rounded-lg hover:bg-violet-100 transition"
+              className="text-sm text-violet-600 dark:text-violet-400 hover:text-violet-800 dark:hover:text-violet-300 px-3 py-1 rounded-lg hover:bg-violet-100 dark:hover:bg-violet-500/15 transition"
             >
               Limpar
             </button>
             <button
               onClick={deleteSelected}
-              className="text-sm text-red-600 hover:text-red-800 px-3 py-1 rounded-lg hover:bg-red-50 transition flex items-center gap-1"
+              className="text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 px-3 py-1 rounded-lg hover:bg-red-50 dark:hover:bg-red-500/10 transition flex items-center gap-1"
             >
               <Trash2 className="w-3.5 h-3.5" /> Excluir selecionados
             </button>
@@ -108,7 +108,7 @@ export default function GalleryGrid({ files }: Props) {
         {files.map((file) => (
           <div
             key={file.id}
-            className={`group relative bg-gray-100 rounded-xl overflow-hidden aspect-square cursor-pointer ${
+            className={`group relative bg-gray-100 dark:bg-gray-800 rounded-xl overflow-hidden aspect-square cursor-pointer ${
               selected.has(file.id) ? 'ring-2 ring-violet-500' : ''
             }`}
             onClick={() => toggleSelect(file.id)}
@@ -134,7 +134,7 @@ export default function GalleryGrid({ files }: Props) {
             )}
 
             {!file.is_approved && (
-              <span className="absolute top-2 left-2 text-[10px] font-medium bg-yellow-100 text-yellow-700 px-1.5 py-0.5 rounded-full">
+              <span className="absolute top-2 left-2 text-[10px] font-medium bg-yellow-100 dark:bg-yellow-500/15 text-yellow-700 dark:text-yellow-400 px-1.5 py-0.5 rounded-full">
                 Pendente
               </span>
             )}
@@ -161,7 +161,7 @@ export default function GalleryGrid({ files }: Props) {
                 <Heart className="w-3.5 h-3.5" fill={file.is_favorite ? 'currentColor' : 'none'} />
               </button>
               <a
-                href={file.file_url}
+                href={`/api/admin/galeria/${file.id}/download`}
                 download
                 onClick={(e) => e.stopPropagation()}
                 className="w-7 h-7 rounded-lg bg-white/90 flex items-center justify-center shadow text-gray-600 hover:bg-violet-500 hover:text-white transition"

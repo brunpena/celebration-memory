@@ -40,10 +40,10 @@ const statusLabel: Record<string, string> = {
 }
 
 const statusColor: Record<string, string> = {
-  ativo: 'bg-green-100 text-green-700',
-  rascunho: 'bg-yellow-100 text-yellow-700',
-  arquivado: 'bg-gray-100 text-gray-600',
-  encerrado: 'bg-red-100 text-red-600',
+  ativo: 'bg-green-100 dark:bg-green-500/10 text-green-700 dark:text-green-400',
+  rascunho: 'bg-yellow-100 dark:bg-yellow-500/10 text-yellow-700 dark:text-yellow-400',
+  arquivado: 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400',
+  encerrado: 'bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-400',
 }
 
 export default async function EventosPage() {
@@ -53,8 +53,8 @@ export default async function EventosPage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">Eventos</h1>
-          <p className="text-gray-500 text-sm mt-1.5">{events.length} evento{events.length !== 1 ? 's' : ''} cadastrado{events.length !== 1 ? 's' : ''}</p>
+          <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 tracking-tight">Eventos</h1>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1.5">{events.length} evento{events.length !== 1 ? 's' : ''} cadastrado{events.length !== 1 ? 's' : ''}</p>
         </div>
         <Link
           href="/admin/eventos/novo"
@@ -66,12 +66,12 @@ export default async function EventosPage() {
       </div>
 
       {events.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 sm:p-16 text-center">
-          <div className="w-16 h-16 bg-violet-50 rounded-2xl flex items-center justify-center mx-auto mb-5">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-12 sm:p-16 text-center">
+          <div className="w-16 h-16 bg-violet-50 dark:bg-violet-500/10 rounded-2xl flex items-center justify-center mx-auto mb-5">
             <Calendar className="w-8 h-8 text-violet-400" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Nenhum evento criado</h3>
-          <p className="text-gray-500 text-sm mb-6 max-w-sm mx-auto">Crie seu primeiro evento para começar a receber fotos e presentes.</p>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Nenhum evento criado</h3>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 max-w-sm mx-auto">Crie seu primeiro evento para começar a receber fotos e presentes.</p>
           <Link
             href="/admin/eventos/novo"
             className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium transition shadow-sm"
@@ -98,8 +98,8 @@ export default async function EventosPage() {
             const guestCount = event.guests?.[0]?.count ?? 0
 
             return (
-              <div key={event.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden group">
-                <div className="h-40 bg-gradient-to-br from-violet-100 to-purple-100 relative">
+              <div key={event.id} className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow overflow-hidden group">
+                <div className="h-40 bg-gradient-to-br from-violet-100 to-purple-100 dark:from-violet-500/20 dark:to-purple-500/20 relative">
                   {event.cover_url ? (
                     <img
                       src={event.cover_url}
@@ -112,31 +112,31 @@ export default async function EventosPage() {
                     </div>
                   )}
                   <div className="absolute top-3 right-3">
-                    <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusColor[event.status] ?? 'bg-gray-100 text-gray-600'}`}>
+                    <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusColor[event.status] ?? 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'}`}>
                       {statusLabel[event.status] ?? event.status}
                     </span>
                   </div>
                 </div>
 
                 <div className="p-5">
-                  <h3 className="font-semibold text-gray-900 truncate">{event.name}</h3>
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100 truncate">{event.name}</h3>
                   {event.date && (
-                    <p className="text-sm text-gray-500 mt-1 flex items-center gap-1">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-1">
                       <Calendar className="w-3.5 h-3.5" />
                       {new Date(event.date).toLocaleDateString('pt-BR')}
                     </p>
                   )}
 
-                  <div className="flex gap-4 mt-3 pt-3 border-t border-gray-50">
-                    <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                  <div className="flex gap-4 mt-3 pt-3 border-t border-gray-50 dark:border-gray-800">
+                    <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
                       <Image className="w-3.5 h-3.5" />
                       {photoCount} fotos
                     </div>
-                    <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                    <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
                       <Video className="w-3.5 h-3.5" />
                       {event.videoCount} vídeos
                     </div>
-                    <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                    <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
                       <ExternalLink className="w-3.5 h-3.5" />
                       {guestCount} convidados
                     </div>
@@ -145,14 +145,14 @@ export default async function EventosPage() {
                   <div className="flex gap-2 mt-4">
                     <Link
                       href={`/admin/eventos/${event.id}`}
-                      className="flex-1 text-center py-2 text-sm font-medium text-violet-600 bg-violet-50 hover:bg-violet-100 rounded-xl transition"
+                      className="flex-1 text-center py-2 text-sm font-medium text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-500/10 hover:bg-violet-100 dark:hover:bg-violet-500/15 rounded-xl transition"
                     >
                       Editar
                     </Link>
                     <Link
                       href={`/e/${event.slug}`}
                       target="_blank"
-                      className="flex-1 text-center py-2 text-sm font-medium text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-xl transition"
+                      className="flex-1 text-center py-2 text-sm font-medium text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition"
                     >
                       Visualizar
                     </Link>

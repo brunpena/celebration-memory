@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Download } from 'lucide-react'
 import GalleryGrid from './_components/GalleryGrid'
 import GalleryTabs from './_components/GalleryTabs'
 
@@ -51,14 +51,27 @@ export default async function GaleriaPage({ params, searchParams }: Props) {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center gap-3">
-        <Link href={`/admin/eventos/${id}`} className="p-2 hover:bg-gray-100 rounded-xl transition text-gray-500">
-          <ArrowLeft className="w-5 h-5" />
-        </Link>
-        <div>
-          <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">Galeria</h1>
-          <p className="text-gray-500 text-sm mt-0.5">{event.name}</p>
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <Link href={`/admin/eventos/${id}`} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition text-gray-500 dark:text-gray-400">
+            <ArrowLeft className="w-5 h-5" />
+          </Link>
+          <div>
+            <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 tracking-tight">Galeria</h1>
+            <p className="text-gray-500 dark:text-gray-400 text-sm mt-0.5">{event.name}</p>
+          </div>
         </div>
+
+        {counts.todos > 0 && (
+          <a
+            href={`/api/admin/eventos/${id}/galeria/zip`}
+            className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-500 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition shadow-sm shrink-0"
+          >
+            <Download className="w-4 h-4" />
+            <span className="hidden sm:inline">Baixar tudo</span>
+            <span className="sm:hidden">.zip</span>
+          </a>
+        )}
       </div>
 
       <GalleryTabs activeTab={tab} counts={counts} eventId={id} />
