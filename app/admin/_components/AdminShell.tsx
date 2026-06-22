@@ -4,6 +4,7 @@ import { useState } from 'react'
 import type { User } from '@supabase/supabase-js'
 import AdminSidebar from './AdminSidebar'
 import AdminHeader from './AdminHeader'
+import AdminBottomNav from './AdminBottomNav'
 import { ThemeProvider } from './ThemeContext'
 
 interface Props {
@@ -31,10 +32,11 @@ export default function AdminShell({ user, userName, accountName, planLabel, chi
         <div className="flex-1 flex flex-col min-w-0">
           <AdminHeader onMenuClick={() => setMenuOpen(true)} />
           <main className="flex-1 overflow-y-auto">
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 py-6 sm:py-10">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 py-6 sm:py-10 pb-24 lg:pb-10">
               {children}
             </div>
           </main>
+          <AdminBottomNav />
         </div>
       </div>
     </ThemeProvider>
